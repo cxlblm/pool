@@ -96,6 +96,9 @@ class Pool
     public function get()
     {
         $context = $this->context();
+        if ($conn = $context[$this->getSelfId()] ?? null) {
+            return $context[$this->getSelfId()];
+        }
         if (!$this->canConsumer()) {
             throw new ManyConsumerException();
         }
