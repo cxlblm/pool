@@ -1,0 +1,26 @@
+{
+    "name": "cxlblm/pool",
+    "description": "swoole",
+    "type": "library",
+    "authors": [
+        {
+            "name": "cxlblm",
+            "email": "cxlblm@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Cxlblm\\Pool\\": "src/"
+        }
+    },
+    "require-dev": {
+        "swoole/ide-helper": "^4.4",
+        "phpunit/phpunit": "^8.3"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}
