@@ -53,7 +53,6 @@ class Pool
         $this->pool = new Channel($this->config->getMaxConn());
         for ($i = 0; $i < $this->config->getMinConn(); ++$i) {
             $this->pushByChannel($this->create());
-            ++$this->count;
         }
     }
 
@@ -66,6 +65,7 @@ class Pool
         if (false === $r) {
             throw new TimeoutException('Pool Push Timeout');
         }
+        ++$this->count;
     }
 
     /**
@@ -102,6 +102,7 @@ class Pool
 
         if ($this->pool->isEmpty() && $this->canCreate()) {
             $conn = $this->create();
+            ++$this->count;
         } else {
             $conn = $this->popByChannel();
         }

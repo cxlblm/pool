@@ -47,13 +47,19 @@ class PoolTest extends TestCase
         $waitGroup = new \Swoole\Coroutine\WaitGroup();
         $waitGroup->add(200);
 
+        $ch = new \Swoole\Coroutine\Channel(210);
+
         for ($i = 0; $i < 200; ++$i) {
-            go(function () use ($pool, $waitGroup) {
-                $pool->get();
-                \Swoole\Coroutine::sleep(mt_rand(1, 4));
+            go(function () use ($pool, $waitGroup, $ch) {
+                $r = $pool->get();
+                $b = $ch->pop();
                 $pool->free();
                 $waitGroup->done();
             });
+        }
+
+        for ($i = 0; $i < 210; ++$i) {
+            $ch->push(true);
         }
 
         $waitGroup->wait();
@@ -75,17 +81,21 @@ class PoolTest extends TestCase
         $waitGroup = new \Swoole\Coroutine\WaitGroup();
         $waitGroup->add(200);
 
+        $ch = new \Swoole\Coroutine\Channel(210);
+
         for ($i = 0; $i < 200; ++$i) {
-            go(function () use ($pool, $waitGroup) {
+            go(function () use ($pool, $waitGroup, $ch) {
                 $pool->get();
-                \Swoole\Coroutine::sleep(mt_rand(1, 4));
+                $ch->pop();
                 $waitGroup->done();
             });
         }
 
-        $waitGroup->wait();
+        for ($i = 0; $i < 200; ++$i) {
+            $ch->push(true);
+        }
 
-        \Swoole\Coroutine::sleep(4);
+        $waitGroup->wait();
 
         $count = function () {
             return $this->count;
